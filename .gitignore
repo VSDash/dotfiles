@@ -1,0 +1,24 @@
+# Dotfiles Repository - Git Ignore
+
+# Local configuration files (not tracked)
+.zshrc.local
+.bashrc.local
+.bash_profile.local
+
+# Backup directories created by bootstrap script
+.dotfiles_backup_*/
+
+# macOS
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.swp
+*~

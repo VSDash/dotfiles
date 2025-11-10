@@ -1,0 +1,153 @@
+# Homebrew Bundle - Package Management for macOS
+# Install with: brew bundle --file=~/dotfiles/homebrew/Brewfile
+
+# ============================================================================
+# Taps - Additional Homebrew Repositories
+# ============================================================================
+
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
+
+# ============================================================================
+# Core Development Tools
+# ============================================================================
+
+# Version control
+brew "git"
+brew "git-lfs"
+
+# Development environment manager (replaces nvm, asdf, direnv, etc.)
+brew "mise"
+
+# Shell enhancements
+brew "zsh"
+brew "zsh-completions"
+brew "zsh-syntax-highlighting"
+
+# Search and navigation
+brew "fzf"              # Fuzzy finder
+brew "ripgrep"          # Fast grep alternative
+brew "fd"               # Fast find alternative
+brew "bat"              # Cat with syntax highlighting
+brew "exa"              # Modern ls replacement
+brew "tree"             # Directory tree viewer
+
+# File management
+brew "wget"
+brew "curl"
+brew "rsync"
+
+# ============================================================================
+# Programming Languages & Runtimes
+# ============================================================================
+
+# Note: mise manages language runtimes (node, python, etc.)
+# Install base versions here or use `mise use -g node@lts` instead
+
+# If you prefer Homebrew-managed base versions:
+# brew "node"
+# brew "python@3.11"
+
+# Package managers can be installed via mise or Homebrew
+# brew "pnpm"             # Fast package manager
+# brew "pipx"             # Python application installer
+
+# Other languages (managed by mise is recommended)
+# mise use -g go@latest
+# mise use -g rust@latest
+# mise use -g ruby@latest
+
+# ============================================================================
+# Development Tools
+# ============================================================================
+
+# Docker
+cask "docker"
+
+# API testing
+brew "httpie"
+
+# Database tools
+brew "postgresql@15"
+brew "redis"
+# brew "mongodb-community"
+
+# Cloud CLI tools
+# brew "awscli"
+# brew "google-cloud-sdk"
+
+# ============================================================================
+# Text Editors & IDEs
+# ============================================================================
+
+cask "visual-studio-code"
+# cask "cursor"
+# cask "sublime-text"
+
+# ============================================================================
+# System Utilities
+# ============================================================================
+
+# Terminal
+cask "iterm2"
+# cask "warp"
+
+# Window management
+# cask "rectangle"
+# cask "raycast"
+
+# Productivity
+# cask "notion"
+# cask "obsidian"
+
+# ============================================================================
+# Communication
+# ============================================================================
+
+cask "slack"
+# cask "discord"
+# cask "zoom"
+
+# ============================================================================
+# Browsers
+# ============================================================================
+
+cask "google-chrome"
+# cask "firefox"
+# cask "arc"
+
+# ============================================================================
+# Development Utilities
+# ============================================================================
+
+brew "jq"               # JSON processor
+brew "yq"               # YAML processor
+brew "tmux"             # Terminal multiplexer
+brew "htop"             # System monitor
+brew "tldr"             # Simplified man pages
+
+# Git utilities
+brew "gh"               # GitHub CLI
+brew "tig"              # Text-mode interface for git
+
+# ============================================================================
+# Optional Tools (uncomment as needed)
+# ============================================================================
+
+# Security
+# brew "gnupg"
+# brew "pass"
+
+# Image optimization
+# brew "imagemagick"
+# brew "ffmpeg"
+
+# Fonts
+# cask "font-fira-code"
+# cask "font-jetbrains-mono"
+# cask "font-source-code-pro"
+
+# Mac App Store apps (requires mas)
+# brew "mas"
+# mas "Xcode", id: 497799835

@@ -1,0 +1,82 @@
+# mise Global Configuration
+# Location: ~/.config/mise/config.toml
+#
+# This is an example global mise configuration.
+# Settings here apply to all projects unless overridden by project-local mise.toml
+#
+# Copy this to ~/.config/mise/config.toml and customize as needed
+
+# ============================================================================
+# Global Tool Versions
+# ============================================================================
+# Install with: mise install -g
+# Or specify in this file
+
+[tools]
+# Default Node.js version when not in a project directory
+node = "lts"
+
+# Package managers
+pnpm = "latest"
+# yarn = "latest"
+# bun = "latest"
+
+# Useful CLI tools
+# jq = "latest"
+# yq = "latest"
+# gh = "latest"
+
+# ============================================================================
+# Global Environment Variables
+# ============================================================================
+# These are available in all projects
+
+[env]
+# Editor preference
+EDITOR = "code"
+VISUAL = "code"
+
+# Increase Node.js memory limit
+NODE_OPTIONS = "--max-old-space-size=8192"
+
+# pnpm configuration
+# PNPM_HOME = "~/.local/share/mise/installs/pnpm/latest/bin"
+
+# ============================================================================
+# Global Settings
+# ============================================================================
+
+[settings]
+# Disable telemetry
+# disable_telemetry = true
+
+# Always keep plugins up to date
+always_keep_download = true
+
+# Enable experimental features
+experimental = true
+
+# Verbose output for debugging
+# verbose = true
+
+# Number of jobs to run in parallel
+# jobs = 4
+
+# ============================================================================
+# Plugin Configuration
+# ============================================================================
+
+# Configure specific plugins
+# [plugins]
+# node = "https://github.com/mise-plugins/mise-node.git"
+
+# ============================================================================
+# Aliases
+# ============================================================================
+# Create tool aliases for convenience
+
+[aliases.node]
+lts = "lts-latest"
+
+[aliases.python]
+3 = "3.12"

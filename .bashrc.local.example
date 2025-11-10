@@ -1,0 +1,13 @@
+# Local machine-specific configurations
+# This file is not tracked in git
+
+# Add your local customizations here
+# Examples:
+# - Machine-specific aliases
+# - Private environment variables
+# - Company-specific paths
+# - API keys (though .env files are preferred)
+
+# Example:
+# export WORK_DIR="$HOME/Projects"
+# alias work="cd $WORK_DIR"

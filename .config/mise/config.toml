@@ -1,0 +1,44 @@
+# mise Global Configuration
+# Location: ~/.config/mise/config.toml
+# Managed by dotfiles repo
+
+# ============================================================================
+# Global Tool Versions
+# ============================================================================
+
+[tools]
+# Default Node.js version when not in a project directory
+node = "lts"
+
+# Package managers
+pnpm = "latest"
+
+# ============================================================================
+# Global Environment Variables
+# ============================================================================
+
+[env]
+# Editor preference
+EDITOR = "code"
+VISUAL = "code"
+
+# Increase Node.js memory limit for large projects
+NODE_OPTIONS = "--max-old-space-size=8192"
+
+# ============================================================================
+# Global Settings
+# ============================================================================
+
+[settings]
+# Always keep downloads cached
+always_keep_download = true
+
+# Enable experimental features
+experimental = true
+
+# ============================================================================
+# Aliases
+# ============================================================================
+
+[aliases.node]
+lts = "lts-latest"

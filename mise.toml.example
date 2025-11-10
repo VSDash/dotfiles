@@ -1,0 +1,135 @@
+# mise.toml - Example Configuration for Node.js Projects
+# Place this file in your project root to automatically:
+# - Switch to the correct Node.js version
+# - Set project-specific environment variables
+# - Define project tasks for common workflows
+#
+# Learn more: https://mise.jdx.dev/
+
+# ============================================================================
+# Development Tools
+# ============================================================================
+# Specify exact versions or use version specifiers like 'lts', 'latest', etc.
+
+[tools]
+node = "22"           # Latest Node 22.x (or use "lts" for LTS version)
+# pnpm = "9"          # Specific pnpm version
+# bun = "latest"      # Latest Bun version
+# terraform = "1.6"   # For IaC projects
+# go = "1.21"         # If you have Go modules
+# python = "3.12"     # For Python scripts
+
+# ============================================================================
+# Environment Variables
+# ============================================================================
+# Set project-specific environment variables
+# These override shell variables when in this directory
+
+[env]
+NODE_ENV = "development"
+# API_URL = "http://localhost:3000"
+# DATABASE_URL = "postgresql://localhost/mydb"
+# LOG_LEVEL = "debug"
+
+# Conditional environment based on profiles
+# [env.production]
+# NODE_ENV = "production"
+# API_URL = "https://api.example.com"
+
+# ============================================================================
+# Tasks - Common Development Workflows
+# ============================================================================
+# Replace or complement package.json scripts with mise tasks
+# Run with: mise run <task-name> or mise run (runs default task)
+
+[tasks.dev]
+description = "Start development server"
+run = "pnpm run dev"
+
+[tasks.build]
+description = "Build the project"
+run = "pnpm run build"
+
+[tasks.test]
+description = "Run all tests"
+run = "pnpm test"
+
+[tasks.lint]
+description = "Lint and format code"
+run = """
+pnpm run lint
+pnpm run format
+"""
+
+[tasks.clean]
+description = "Clean build artifacts and dependencies"
+run = """
+rm -rf dist build .next out
+rm -rf node_modules
+"""
+
+[tasks.fresh]
+description = "Fresh install - clean and reinstall dependencies"
+depends = ["clean"]
+run = "pnpm install"
+
+[tasks.docker-up]
+description = "Start Docker services"
+run = "docker-compose up -d"
+
+[tasks.docker-down]
+description = "Stop Docker services"
+run = "docker-compose down"
+
+[tasks.migrate]
+description = "Run database migrations"
+run = "pnpm run migrate"
+
+[tasks.setup]
+description = "Setup project for first time"
+run = """
+echo "Installing dependencies..."
+pnpm install
+echo "Running database setup..."
+mise run docker-up
+mise run migrate
+echo "Setup complete! Run 'mise run dev' to start"
+"""
+
+# ============================================================================
+# Task Dependencies
+# ============================================================================
+# Tasks can depend on other tasks
+
+[tasks.ci]
+description = "Run CI checks (lint, test, build)"
+depends = ["lint", "test", "build"]
+
+# ============================================================================
+# Background Tasks
+# ============================================================================
+# Watch tasks that run in the background
+
+# [tasks.watch]
+# description = "Watch and rebuild on file changes"
+# run = "pnpm run watch"
+# wait_for = false  # Don't wait for this task to complete
+
+# ============================================================================
+# Advanced: File-based Task Dependencies
+# ============================================================================
+# Tasks can specify source files they depend on
+
+# [tasks.build]
+# sources = ["src/**/*.ts", "src/**/*.tsx"]
+# outputs = ["dist/**/*"]
+# run = "pnpm run build"
+
+# ============================================================================
+# Load additional environment from files
+# ============================================================================
+# You can load .env files automatically
+
+# _.file = ".env"
+# _.file = ".env.local"
+# _.file = ".env.{{NODE_ENV}}"  # Template support

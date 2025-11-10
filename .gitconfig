@@ -1,0 +1,133 @@
+[user]
+	# Update with your information
+	name = Your Name
+	email = your.email@example.com
+
+[core]
+	editor = code --wait
+	autocrlf = input
+	excludesfile = ~/.gitignore_global
+	# Use colors in output
+	pager = less -FRX
+
+[init]
+	defaultBranch = main
+
+[color]
+	ui = auto
+	branch = auto
+	diff = auto
+	status = auto
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+
+[alias]
+	# Short status
+	s = status -s
+	st = status
+	
+	# Branch operations
+	br = branch
+	co = checkout
+	cob = checkout -b
+	
+	# Commit shortcuts
+	ci = commit
+	cm = commit -m
+	ca = commit --amend
+	can = commit --amend --no-edit
+	
+	# Add operations
+	a = add
+	aa = add --all
+	ap = add --patch
+	
+	# Diff operations
+	d = diff
+	ds = diff --staged
+	dc = diff --cached
+	
+	# Log operations
+	l = log --oneline
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	lga = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+	
+	# Push/Pull
+	ps = push
+	pl = pull
+	pf = push --force-with-lease
+	
+	# Stash operations
+	ss = stash save
+	sp = stash pop
+	sl = stash list
+	
+	# Remote operations
+	r = remote -v
+	
+	# Undo last commit but keep changes
+	undo = reset --soft HEAD^
+	
+	# Discard all local changes
+	discard = checkout -- .
+	
+	# Show contributors
+	contributors = shortlog --summary --numbered
+	
+	# Find branches containing commit
+	fb = "!f() { git branch -a --contains $1; }; f"
+	
+	# Find tags containing commit
+	ft = "!f() { git describe --always --contains $1; }; f"
+	
+	# Remove branches that have already been merged
+	cleanup = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+
+[push]
+	default = simple
+	followTags = true
+
+[pull]
+	rebase = false
+
+[fetch]
+	prune = true
+
+[diff]
+	# Better diff algorithm
+	algorithm = patience
+	compactionHeuristic = true
+
+[merge]
+	# Include summaries of merged commits
+	log = true
+	# Use VS Code as merge tool
+	tool = vscode
+
+[mergetool "vscode"]
+	cmd = code --wait $MERGED
+
+[credential]
+	helper = osxkeychain
+
+[help]
+	# Autocorrect typos
+	autocorrect = 1
+
+[rerere]
+	# Reuse recorded resolution of conflicted merges
+	enabled = true
