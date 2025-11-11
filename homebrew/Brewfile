@@ -35,7 +35,7 @@ brew "fzf"              # Fuzzy finder
 brew "ripgrep"          # Fast grep alternative
 brew "fd"               # Fast find alternative
 brew "bat"              # Cat with syntax highlighting
-brew "exa"              # Modern ls replacement
+brew "eza"              # Modern ls replacement (replaces exa)
 brew "tree"             # Directory tree viewer
 
 # File management

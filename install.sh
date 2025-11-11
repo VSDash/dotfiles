@@ -91,11 +91,23 @@ setup_mise() {
     echo -e "\n${BLUE}Setting up mise development environment...${NC}"
     
     if command_exists mise; then
-        # Trust the global mise config
+        # Trust the mise config directory (handles symlinked configs)
         local mise_config="$HOME/.config/mise/config.toml"
-        if [ -f "$mise_config" ]; then
+        
+        if [ -f "$mise_config" ] || [ -L "$mise_config" ]; then
             echo -e "${YELLOW}Trusting mise configuration...${NC}"
-            mise trust "$mise_config" 2>&1 || true
+            
+            # Get the actual config file path (follows symlinks)
+            local actual_config
+            if [ -L "$mise_config" ]; then
+                actual_config=$(readlink -f "$mise_config" 2>/dev/null || readlink "$mise_config")
+                local actual_dir=$(dirname "$actual_config")
+                echo -e "${YELLOW}Trusting symlinked config directory: $actual_dir${NC}"
+                mise trust "$actual_dir" 2>&1 || true
+            fi
+            
+            # Also trust the ~/.config/mise directory
+            mise trust "$HOME/.config/mise" 2>&1 || true
         fi
         
         # Install global tools
