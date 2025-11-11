@@ -418,6 +418,26 @@ mise exec node@22 -- npm test
 
 ### Troubleshooting
 
+#### Common Installation Warnings (Safe to Ignore)
+
+**Homebrew on Linux:**
+- `Tapping homebrew/bundle has failed` - This tap is deprecated and empty (safe to ignore)
+- `Tapping homebrew/cask has failed` - Not needed anymore (safe to ignore)  
+- `Tapping homebrew/core has failed` - Not needed anymore (safe to ignore)
+
+These are expected warnings on modern Homebrew installations where these taps are now built-in.
+
+**mise Configuration:**
+- If you see "Config files are not trusted" errors, the install script handles this automatically
+- Symlinked configs (like in Coder) require trusting both the symlink and target directories
+- Run `mise trust ~/.config/mise` if issues persist
+
+**Shell Changes:**
+- `chsh` may require password authentication in non-interactive environments (like Coder)
+- You can manually change shells later with: `chsh -s $(which zsh)`
+
+#### mise Debugging
+
 ```bash
 # Check mise health
 mise doctor
