@@ -51,7 +51,15 @@ install_homebrew() {
 install_packages() {
     if [ -f "$DOTFILES_DIR/homebrew/Brewfile" ]; then
         echo -e "\n${YELLOW}Installing packages from Brewfile...${NC}"
-        brew bundle --file="$DOTFILES_DIR/homebrew/Brewfile"
+        
+        # On Linux, skip cask installations (macOS GUI apps)
+        if [[ "$OS" == "Linux" ]]; then
+            echo -e "${YELLOW}Note: Skipping cask installations on Linux${NC}"
+            brew bundle --file="$DOTFILES_DIR/homebrew/Brewfile" --no-lock 2>&1 | grep -v "Skipping cask" || true
+        else
+            brew bundle --file="$DOTFILES_DIR/homebrew/Brewfile" --no-lock
+        fi
+        
         echo -e "${GREEN}✓ Packages installed${NC}"
     else
         echo -e "${YELLOW}No Brewfile found, skipping package installation${NC}"
@@ -81,16 +89,17 @@ setup_mise() {
     if command_exists mise; then
         # Install global tools
         echo -e "${YELLOW}Installing global Node.js LTS...${NC}"
-        mise use -g node@lts
+        mise use -g node@lts 2>&1 || echo -e "${YELLOW}Could not install Node.js LTS, you can do this later with 'mise use -g node@lts'${NC}"
         
         # Install pnpm globally
         echo -e "${YELLOW}Installing global pnpm...${NC}"
-        mise use -g pnpm@latest
+        mise use -g pnpm@latest 2>&1 || echo -e "${YELLOW}Could not install pnpm, you can do this later with 'mise use -g pnpm@latest'${NC}"
         
         echo -e "${GREEN}✓ mise setup complete${NC}"
         echo -e "${YELLOW}Tip: Use 'mise use node@22' in projects to set specific versions${NC}"
     else
         echo -e "${YELLOW}mise not found, skipping global tool installation${NC}"
+        echo -e "${YELLOW}Install mise manually: curl https://mise.run | sh${NC}"
     fi
 }
 
@@ -131,19 +140,21 @@ setup_macos() {
 main() {
     echo -e "${BLUE}Starting installation...${NC}\n"
     
+    local exit_code=0
+    
     # macOS/Linux only
     if [[ "$OS" == "Darwin" ]] || [[ "$OS" == "Linux" ]]; then
-        install_homebrew
-        install_packages
+        install_homebrew || { echo -e "${RED}Warning: Homebrew installation failed${NC}"; exit_code=1; }
+        install_packages || { echo -e "${RED}Warning: Package installation had issues${NC}"; exit_code=1; }
     else
         echo -e "${YELLOW}Homebrew installation skipped (not macOS/Linux)${NC}"
     fi
     
-    setup_shell
-    setup_git
-    run_bootstrap
-    setup_mise
-    setup_macos
+    setup_shell || { echo -e "${RED}Warning: Shell setup failed${NC}"; exit_code=1; }
+    setup_git || { echo -e "${RED}Warning: Git setup failed${NC}"; exit_code=1; }
+    run_bootstrap || { echo -e "${RED}Warning: Bootstrap failed${NC}"; exit_code=1; }
+    setup_mise || { echo -e "${YELLOW}Warning: mise setup incomplete${NC}"; }
+    setup_macos || true  # Skip errors for non-macOS
     
     echo -e "\n${GREEN}"
     echo "╔══════════════════════════════════════╗"
@@ -151,10 +162,18 @@ main() {
     echo "╔══════════════════════════════════════╗"
     echo -e "${NC}\n"
     
+    if [ $exit_code -ne 0 ]; then
+        echo -e "${YELLOW}⚠️  Installation completed with some warnings${NC}"
+        echo -e "${YELLOW}Check the output above for details${NC}\n"
+    fi
+    
     echo -e "${YELLOW}Next steps:${NC}"
     echo -e "  1. Restart your terminal or run: source ~/.zshrc"
     echo -e "  2. Review and customize your dotfiles in: ${DOTFILES_DIR}"
-    echo -e "  3. Update Git user info in ~/.gitconfig if needed\n"
+    echo -e "  3. Update Git user info in ~/.gitconfig if needed"
+    echo -e "  4. Run 'mise doctor' to check mise setup\n"
+    
+    return 0  # Always return success to not break coder dotfiles
 }
 
 # Run main function

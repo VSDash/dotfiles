@@ -18,10 +18,13 @@ chmod +x install.sh
 
 The install script will:
 - Install Homebrew (macOS/Linux)
-- Install packages from Brewfile
+- Install packages from Brewfile (OS-aware: skips GUI apps on Linux)
 - Create symlinks to dotfiles
 - Set up shell configurations
-- Apply macOS defaults (if on macOS)
+- Set up mise with global tools
+- Apply macOS defaults (macOS only)
+
+**Note:** The script is cross-platform compatible and handles errors gracefully. On Linux, it will skip macOS-specific GUI applications (casks) automatically.
 
 ### Manual Bootstrap (Symlink Only)
 

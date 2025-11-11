@@ -67,8 +67,10 @@ brew "rsync"
 # Development Tools
 # ============================================================================
 
-# Docker
-cask "docker"
+# Docker (macOS only - use native Docker on Linux)
+if OS.mac?
+  cask "docker"
+end
 
 # API testing
 brew "httpie"
@@ -83,20 +85,24 @@ brew "redis"
 # brew "google-cloud-sdk"
 
 # ============================================================================
-# Text Editors & IDEs
+# Text Editors & IDEs (macOS only - casks don't work on Linux)
 # ============================================================================
 
-cask "visual-studio-code"
-# cask "cursor"
-# cask "sublime-text"
+if OS.mac?
+  cask "visual-studio-code"
+  # cask "cursor"
+  # cask "sublime-text"
+end
 
 # ============================================================================
 # System Utilities
 # ============================================================================
 
-# Terminal
-cask "iterm2"
-# cask "warp"
+# Terminal (macOS only)
+if OS.mac?
+  cask "iterm2"
+  # cask "warp"
+end
 
 # Window management
 # cask "rectangle"
@@ -107,20 +113,24 @@ cask "iterm2"
 # cask "obsidian"
 
 # ============================================================================
-# Communication
+# Communication (macOS only)
 # ============================================================================
 
-cask "slack"
-# cask "discord"
-# cask "zoom"
+if OS.mac?
+  cask "slack"
+  # cask "discord"
+  # cask "zoom"
+end
 
 # ============================================================================
-# Browsers
+# Browsers (macOS only)
 # ============================================================================
 
-cask "google-chrome"
-# cask "firefox"
-# cask "arc"
+if OS.mac?
+  cask "google-chrome"
+  # cask "firefox"
+  # cask "arc"
+end
 
 # ============================================================================
 # Development Utilities
