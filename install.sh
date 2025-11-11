@@ -55,9 +55,9 @@ install_packages() {
         # On Linux, skip cask installations (macOS GUI apps)
         if [[ "$OS" == "Linux" ]]; then
             echo -e "${YELLOW}Note: Skipping cask installations on Linux${NC}"
-            brew bundle --file="$DOTFILES_DIR/homebrew/Brewfile" --no-lock 2>&1 | grep -v "Skipping cask" || true
+            brew bundle --file="$DOTFILES_DIR/homebrew/Brewfile" 2>&1 | grep -v "Skipping cask" || true
         else
-            brew bundle --file="$DOTFILES_DIR/homebrew/Brewfile" --no-lock
+            brew bundle --file="$DOTFILES_DIR/homebrew/Brewfile"
         fi
         
         echo -e "${GREEN}✓ Packages installed${NC}"
@@ -73,9 +73,13 @@ setup_shell() {
     # Check if zsh is installed and set as default
     if command_exists zsh; then
         if [[ "$SHELL" != *"zsh"* ]]; then
-            echo -e "${YELLOW}Changing default shell to zsh...${NC}"
-            chsh -s "$(which zsh)"
-            echo -e "${GREEN}✓ Default shell changed to zsh${NC}"
+            echo -e "${YELLOW}Attempting to change default shell to zsh...${NC}"
+            if chsh -s "$(which zsh)" 2>/dev/null; then
+                echo -e "${GREEN}✓ Default shell changed to zsh${NC}"
+            else
+                echo -e "${YELLOW}⚠️  Could not change shell automatically (requires password)${NC}"
+                echo -e "${YELLOW}   You can change it manually later with: chsh -s \$(which zsh)${NC}"
+            fi
         else
             echo -e "${GREEN}✓ zsh is already the default shell${NC}"
         fi
@@ -87,6 +91,13 @@ setup_mise() {
     echo -e "\n${BLUE}Setting up mise development environment...${NC}"
     
     if command_exists mise; then
+        # Trust the global mise config
+        local mise_config="$HOME/.config/mise/config.toml"
+        if [ -f "$mise_config" ]; then
+            echo -e "${YELLOW}Trusting mise configuration...${NC}"
+            mise trust "$mise_config" 2>&1 || true
+        fi
+        
         # Install global tools
         echo -e "${YELLOW}Installing global Node.js LTS...${NC}"
         mise use -g node@lts 2>&1 || echo -e "${YELLOW}Could not install Node.js LTS, you can do this later with 'mise use -g node@lts'${NC}"
@@ -171,7 +182,18 @@ main() {
     echo -e "  1. Restart your terminal or run: source ~/.zshrc"
     echo -e "  2. Review and customize your dotfiles in: ${DOTFILES_DIR}"
     echo -e "  3. Update Git user info in ~/.gitconfig if needed"
-    echo -e "  4. Run 'mise doctor' to check mise setup\n"
+    
+    if command_exists mise; then
+        echo -e "  4. Run 'mise doctor' to verify mise setup"
+        echo -e "  5. Install global tools: mise use -g node@lts pnpm@latest"
+        echo -e "  6. View global tasks: mise tasks"
+    fi
+    
+    if [[ "$SHELL" != *"zsh"* ]]; then
+        echo -e "  ${YELLOW}⚠️  Run 'chsh -s \$(which zsh)' to set zsh as default shell${NC}"
+    fi
+    
+    echo ""
     
     return 0  # Always return success to not break coder dotfiles
 }
