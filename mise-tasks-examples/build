@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Build the project"
+#MISE depends="lint test"
+#MISE sources="src/**/*.ts"
+#MISE outputs="dist/**/*"
+
+set -e
+
+echo "🏗️  Building project..."
+pnpm run build
+echo "✅ Build complete!"

@@ -1,0 +1,98 @@
+# mise.dev.toml - Development Environment Configuration
+# This file is loaded when MISE_ENV=dev or when you're in development mode
+# 
+# Usage:
+# 1. Copy to your project root
+# 2. Run: export MISE_ENV=dev (or add to .env file)
+# 3. mise will automatically load mise.dev.toml instead of mise.toml
+
+# ============================================================================
+# Development Tools
+# ============================================================================
+
+[tools]
+node = "lts"              # Use LTS for stability in development
+pnpm = "latest"
+
+# Development-specific tools
+# watchman = "latest"     # File watching for hot reload
+# nodemon = "latest"      # Auto-restart node apps
+
+# ============================================================================
+# Development Environment Variables
+# ============================================================================
+
+[env]
+NODE_ENV = "development"
+LOG_LEVEL = "debug"
+DEBUG = "*"               # Enable all debug output
+
+# API endpoints - point to local/staging
+API_URL = "http://localhost:5001"
+DASHBOARD_URL = "http://localhost:5000"
+SOCKET_URL = "http://localhost:6001"
+
+# Database - local development
+DATABASE_URL = "postgresql://localhost:5432/dashclicks_dev"
+REDIS_URL = "redis://localhost:6379"
+
+# Development features
+ENABLE_SOURCE_MAPS = "true"
+ENABLE_HOT_RELOAD = "true"
+DISABLE_CACHE = "true"
+
+# Mock external services
+MOCK_EXTERNAL_APIS = "true"
+STRIPE_TEST_MODE = "true"
+
+# ============================================================================
+# Development Tasks
+# ============================================================================
+
+[tasks.dev]
+description = "Start development server with hot reload"
+run = "pnpm run dev"
+
+[tasks.dev-debug]
+description = "Start development server with debugger"
+run = "node --inspect pnpm run dev"
+
+[tasks.setup]
+description = "Set up development environment"
+run = """
+echo "🔧 Setting up development environment..."
+pnpm install
+docker-compose up -d
+pnpm run migrate:dev
+pnpm run seed:dev
+echo "✅ Development environment ready!"
+"""
+
+[tasks.db-reset]
+description = "Reset local database"
+run = """
+echo "⚠️  Resetting database..."
+pnpm run migrate:reset
+pnpm run migrate:dev
+pnpm run seed:dev
+echo "✅ Database reset complete!"
+"""
+
+[tasks.logs]
+description = "Tail development logs"
+run = "tail -f logs/development.log"
+
+[tasks.clean-cache]
+description = "Clean all development caches"
+run = """
+rm -rf node_modules/.cache
+rm -rf .next/cache
+rm -rf dist
+echo "✅ Cache cleaned!"
+"""
+
+# ============================================================================
+# Load .env files
+# ============================================================================
+
+_.file = [".env", ".env.development", ".env.local"]

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Run all tests with coverage"
+#MISE alias="t"
+
+set -e
+
+echo "🧪 Running tests..."
+pnpm run test --coverage
+echo "✅ Tests passed!"

@@ -42,6 +42,16 @@ export PATH="$HOME/.local/bin:$PATH"
 # Activate mise (must come after PATH setup)
 if command -v mise &> /dev/null; then
     eval "$(mise activate zsh)"
+    
+    # Hook for directory changes - auto-install missing tools
+    # This runs mise install automatically when entering directories with mise.toml
+    autoload -U add-zsh-hook
+    _mise_hook() {
+        if [ -f "mise.toml" ] || [ -f ".mise.toml" ] || [ -f ".tool-versions" ]; then
+            mise install --quiet 2>/dev/null || true
+        fi
+    }
+    add-zsh-hook chpwd _mise_hook
 fi
 
 # Legacy support - if you still have nvm installed

@@ -1,0 +1,91 @@
+# mise.prod.toml - Production Environment Configuration
+# This file is loaded when MISE_ENV=prod or in production deployments
+#
+# Usage in CI/CD:
+# export MISE_ENV=prod && mise install && mise run deploy
+
+# ============================================================================
+# Production Tools - Pinned Versions for Stability
+# ============================================================================
+
+[tools]
+node = "20.11.1"          # Pinned to specific version
+pnpm = "9.0.0"            # Pinned version for reproducibility
+
+# Production tooling
+# terraform = "1.6.0"
+# kubectl = "1.28.0"
+
+# ============================================================================
+# Production Environment Variables
+# ============================================================================
+
+[env]
+NODE_ENV = "production"
+LOG_LEVEL = "info"        # Less verbose in production
+
+# Production endpoints (use secrets management in real deployment)
+# API_URL = "https://api.production.com"
+# DASHBOARD_URL = "https://dashboard.production.com"
+
+# Performance optimizations
+NODE_OPTIONS = "--max-old-space-size=8192"
+ENABLE_SOURCE_MAPS = "false"
+ENABLE_HOT_RELOAD = "false"
+DISABLE_CACHE = "false"
+
+# Production flags
+MOCK_EXTERNAL_APIS = "false"
+STRIPE_TEST_MODE = "false"
+
+# ============================================================================
+# Production Tasks
+# ============================================================================
+
+[tasks.build]
+description = "Build for production"
+run = """
+echo "🏗️  Building production bundle..."
+pnpm run build
+echo "✅ Production build complete!"
+"""
+
+[tasks.test]
+description = "Run production test suite"
+run = """
+pnpm run lint
+pnpm run test:unit
+pnpm run test:integration
+"""
+
+[tasks.deploy]
+description = "Deploy to production (with checks)"
+depends = ["test", "build"]
+run = """
+echo "🚀 Deploying to production..."
+# Add your deployment commands here
+echo "✅ Deployment complete!"
+"""
+
+[tasks.health-check]
+description = "Check production health"
+run = """
+curl -f https://api.production.com/health || exit 1
+echo "✅ Health check passed!"
+"""
+
+[tasks.rollback]
+description = "Rollback to previous version"
+run = """
+echo "⏮️  Rolling back..."
+# Add rollback logic here
+echo "✅ Rollback complete!"
+"""
+
+# ============================================================================
+# Security - No .env files in production
+# ============================================================================
+# Use secrets management (AWS Secrets Manager, Vault, etc.)
+# Do NOT load .env files in production
+
+# _.file = ".env.production"  # ⚠️ NOT RECOMMENDED

@@ -332,6 +332,13 @@ mise config
 
 # Doctor - check mise setup
 mise doctor
+
+# Global tasks (available anywhere)
+mise run update        # Update mise and all tools
+mise run doctor        # Health check
+mise run cleanup       # Clean cache
+mise run versions      # Show installed versions
+mise run outdated      # Check for updates
 ```
 
 ### Global Tool Configuration
@@ -345,6 +352,84 @@ pnpm = "latest"
 
 [env]
 NODE_OPTIONS = "--max-old-space-size=8192"
+
+[tasks.update]
+run = "mise self-update && mise plugins update && mise upgrade"
+```
+
+### Environment-Specific Configurations
+
+Create environment-specific configs for different workflows:
+
+```bash
+# Development
+export MISE_ENV=dev
+mise install  # Loads mise.dev.toml
+
+# Production
+export MISE_ENV=prod
+mise install  # Loads mise.prod.toml
+```
+
+### Auto-install on Directory Change
+
+The dotfiles include a shell hook that automatically installs missing tools when you `cd` into a project directory with a `mise.toml` file. No manual `mise install` needed!
+
+### File-based Tasks
+
+Alternative to TOML tasks - create executable scripts:
+
+```bash
+# Create mise-tasks directory
+mkdir -p mise-tasks
+
+# Create a task
+cat > mise-tasks/build << 'EOF'
+#!/usr/bin/env bash
+#MISE description="Build the project"
+pnpm run build
+EOF
+
+chmod +x mise-tasks/build
+
+# Run it
+mise run build
+```
+
+See `mise-tasks-examples/` in this repo for more examples.
+
+### Advanced: Multiple Tool Versions
+
+Test across multiple Node versions:
+
+```toml
+[tools]
+node = ["20", "22"]  # Installs both versions
+
+[tasks.test-all]
+run = """
+mise exec node@20 -- npm test
+mise exec node@22 -- npm test
+"""
+```
+
+### Troubleshooting
+
+```bash
+# Check mise health
+mise doctor
+
+# Clear cache if things are stale
+mise cache clear
+
+# Verbose mode for debugging
+mise -v install node@22
+
+# Check what config files are loaded
+mise config
+
+# See exact PATH modifications
+mise env | grep PATH
 ```
 
 ## 🎯 Requirements

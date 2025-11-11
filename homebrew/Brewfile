@@ -20,6 +20,11 @@ brew "git-lfs"
 # Development environment manager (replaces nvm, asdf, direnv, etc.)
 brew "mise"
 
+# Useful development tools (managed by mise or Homebrew)
+brew "jq"               # JSON processor
+brew "yq"               # YAML processor  
+brew "gh"               # GitHub CLI
+
 # Shell enhancements
 brew "zsh"
 brew "zsh-completions"

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#MISE description="Clean and reset development environment"
+
+set -e
+
+echo "🧹 Cleaning development environment..."
+
+# Clean build artifacts
+rm -rf dist build .next out
+
+# Clean node_modules
+rm -rf node_modules
+
+# Clean caches
+rm -rf .cache
+rm -rf node_modules/.cache
+
+# Stop docker containers
+docker-compose down
+
+echo "✅ Environment cleaned!"
+echo "Run 'mise run setup' to reinitialize"

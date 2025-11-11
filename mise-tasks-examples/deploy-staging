@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#MISE description="Deploy to staging environment"
+#MISE depends="build test"
+
+set -e
+
+echo "🚀 Deploying to staging..."
+
+# Check if we're on the right branch
+BRANCH=$(git branch --show-current)
+if [ "$BRANCH" != "develop" ]; then
+    echo "⚠️  Warning: Not on develop branch (current: $BRANCH)"
+    read -p "Continue? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+fi
+
+# Build and deploy
+pnpm run build
+pnpm run deploy:staging
+
+echo "✅ Deployment complete!"

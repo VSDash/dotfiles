@@ -13,11 +13,23 @@
 
 [tools]
 node = "22"           # Latest Node 22.x (or use "lts" for LTS version)
-# pnpm = "9"          # Specific pnpm version
+pnpm = "9"            # Specific pnpm version
+
+# Uncomment for multiple versions (useful for testing)
+# node = ["20", "22"]  # Install both Node 20 and 22
+# python = ["3.11", "3.12"]  # Multiple Python versions
+
+# Additional tools
 # bun = "latest"      # Latest Bun version
 # terraform = "1.6"   # For IaC projects
 # go = "1.21"         # If you have Go modules
 # python = "3.12"     # For Python scripts
+
+# Tool-specific options
+# [tools.node]
+# version = "22"
+# # Run after installation
+# postinstall = "corepack enable"
 
 # ============================================================================
 # Environment Variables
@@ -106,30 +118,68 @@ description = "Run CI checks (lint, test, build)"
 depends = ["lint", "test", "build"]
 
 # ============================================================================
-# Background Tasks
+# Background Tasks & File Watching
 # ============================================================================
-# Watch tasks that run in the background
 
-# [tasks.watch]
-# description = "Watch and rebuild on file changes"
-# run = "pnpm run watch"
-# wait_for = false  # Don't wait for this task to complete
+[tasks.watch]
+description = "Watch and rebuild on file changes"
+run = "pnpm run build --watch"
+# Use mise watch for automatic reruns
+# mise watch -t build
+
+[tasks.dev-watch]
+description = "Watch mode with multiple watchers"
+run = """
+# Start multiple watch processes
+pnpm run watch:css &
+pnpm run watch:js &
+pnpm run dev
+"""
 
 # ============================================================================
 # Advanced: File-based Task Dependencies
 # ============================================================================
 # Tasks can specify source files they depend on
+# mise will only run the task if sources are newer than outputs
 
-# [tasks.build]
-# sources = ["src/**/*.ts", "src/**/*.tsx"]
-# outputs = ["dist/**/*"]
-# run = "pnpm run build"
+[tasks.build-optimized]
+description = "Build with smart file watching"
+sources = ["src/**/*.ts", "src/**/*.tsx"]
+outputs = ["dist/**/*"]
+run = "pnpm run build"
+
+[tasks.test-changed]
+description = "Test only changed files"
+sources = ["src/**/*.test.ts"]
+run = "pnpm run test --changed"
+
+# ============================================================================
+# Hooks - Run commands on events
+# ============================================================================
+
+# [hooks]
+# enter = """
+# echo "Entering project directory"
+# mise install --quiet
+# """
+# leave = """
+# echo "Leaving project directory"
+# """
 
 # ============================================================================
 # Load additional environment from files
 # ============================================================================
-# You can load .env files automatically
+# Load .env files automatically
 
-# _.file = ".env"
-# _.file = ".env.local"
-# _.file = ".env.{{NODE_ENV}}"  # Template support
+_.file = [".env", ".env.local"]
+
+# Template support for environment-specific files
+# _.file = ".env.{{NODE_ENV}}"
+
+# ============================================================================
+# Min/Max versions (optional)
+# ============================================================================
+# Specify minimum mise version required
+
+[min_version]
+mise = "2024.1.0"

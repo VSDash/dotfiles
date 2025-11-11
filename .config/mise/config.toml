@@ -13,6 +13,12 @@ node = "lts"
 # Package managers
 pnpm = "latest"
 
+# Useful CLI tools (uncomment as needed)
+# jq = "latest"           # JSON processor
+# yq = "latest"           # YAML processor
+# gh = "latest"           # GitHub CLI
+# ripgrep = "latest"      # Fast grep alternative
+
 # ============================================================================
 # Global Environment Variables
 # ============================================================================
@@ -25,16 +31,85 @@ VISUAL = "code"
 # Increase Node.js memory limit for large projects
 NODE_OPTIONS = "--max-old-space-size=8192"
 
+# mise configuration
+MISE_EXPERIMENTAL = "1"
+
 # ============================================================================
 # Global Settings
 # ============================================================================
 
 [settings]
+# Disable telemetry
+disable_telemetry = true
+
 # Always keep downloads cached
 always_keep_download = true
 
 # Enable experimental features
 experimental = true
+
+# Number of jobs to run in parallel (adjust based on CPU cores)
+jobs = 4
+
+# Auto-install missing tools when entering a directory
+auto_install = true
+
+# Verbose output (uncomment for debugging)
+# verbose = true
+
+# Trust config files by default (be cautious with this)
+# trusted_config_paths = ["~/Dashclicks"]
+
+# ============================================================================
+# Global Tasks
+# ============================================================================
+# Tasks available in any directory with 'mise run <task>'
+
+[tasks.update]
+description = "Update all mise plugins and tools"
+run = """
+echo "🔄 Updating mise..."
+mise self-update
+echo "🔄 Updating plugins..."
+mise plugins update
+echo "🔄 Upgrading global tools..."
+mise upgrade
+echo "✅ Update complete!"
+"""
+
+[tasks.doctor]
+description = "Check mise setup and diagnose issues"
+run = "mise doctor"
+
+[tasks.cleanup]
+description = "Clean mise cache and old tool versions"
+run = """
+echo "🧹 Cleaning cache..."
+mise cache clear
+echo "🧹 Pruning old versions..."
+mise prune --yes
+echo "✅ Cleanup complete!"
+"""
+
+[tasks.versions]
+description = "Show all installed tool versions"
+run = "mise list"
+
+[tasks.outdated]
+description = "Check for outdated tools"
+run = "mise outdated"
+
+[tasks.env-check]
+description = "Show current mise environment"
+run = "mise env"
+
+[tasks.config-check]
+description = "Show loaded configuration files"
+run = "mise config"
+
+[tasks.node-versions]
+description = "List available Node.js versions"
+run = "mise list-remote node | tail -20"
 
 # ============================================================================
 # Aliases
@@ -42,3 +117,9 @@ experimental = true
 
 [aliases.node]
 lts = "lts-latest"
+20 = "20"
+22 = "22"
+
+[aliases.python]
+3 = "3.12"
+py3 = "3.12"
