@@ -26,6 +26,26 @@ The install script will:
 
 **Note:** The script is cross-platform compatible and handles errors gracefully. On Linux, it will skip macOS-specific GUI applications (casks) automatically.
 
+### Coder.com Integration
+
+These dotfiles are designed to work automatically with [Coder](https://coder.com) workspaces:
+
+```hcl
+# In your Coder template.tf
+module "dotfiles" {
+  source   = "registry.coder.com/modules/dotfiles/coder"
+  version  = "1.0.14"
+  agent_id = coder_agent.main.id
+}
+```
+
+**Coder-specific behavior:**
+- Installation is fully automated (no user input required)
+- mise activation and global tool installation happens automatically
+- Symlinks are created in `~/.config/coderv2/dotfiles/`
+- New terminals automatically have Node.js, pnpm, and all tools available
+- No shell restart needed - tools are activated during workspace creation
+
 ### Manual Bootstrap (Symlink Only)
 
 If you already have tools installed and just want to symlink dotfiles:

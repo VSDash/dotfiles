@@ -207,6 +207,29 @@ main() {
     
     echo ""
     
+    # For Coder environments: activate mise immediately and install tools
+    if [ -n "$CODER" ] || [ -n "$CODER_WORKSPACE_NAME" ]; then
+        echo -e "${BLUE}Detected Coder environment - activating mise now...${NC}"
+        
+        # Activate mise in current shell
+        if command_exists mise; then
+            eval "$(mise activate bash)" 2>/dev/null || true
+            
+            # Install global tools immediately
+            echo -e "${YELLOW}Installing global Node.js and pnpm for immediate use...${NC}"
+            mise use -g node@lts 2>&1 | grep -v "^mise" || true
+            mise use -g pnpm@latest 2>&1 | grep -v "^mise" || true
+            
+            # Verify installation
+            if mise which node >/dev/null 2>&1; then
+                echo -e "${GREEN}✓ Node.js installed and ready: $(mise which node)${NC}"
+            fi
+            if mise which pnpm >/dev/null 2>&1; then
+                echo -e "${GREEN}✓ pnpm installed and ready: $(mise which pnpm)${NC}"
+            fi
+        fi
+    fi
+    
     return 0  # Always return success to not break coder dotfiles
 }
 
