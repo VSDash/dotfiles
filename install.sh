@@ -3,8 +3,9 @@
 # install.sh - Main installation script for dotfiles
 #
 # This script sets up a new machine with all necessary tools and configurations.
-
-set -e
+#
+# NOTE: set -e is intentionally NOT used here to ensure the script continues
+# even if individual commands fail (required for Coder dotfiles module)
 
 # Colors for output
 RED='\033[0;31m'
@@ -247,3 +248,6 @@ main() {
 
 # Run main function
 main
+
+# Explicitly exit with success code for Coder compatibility
+exit 0
