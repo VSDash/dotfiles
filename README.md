@@ -41,10 +41,12 @@ module "dotfiles" {
 
 **Coder-specific behavior:**
 - Installation is fully automated (no user input required)
+- **Script designed to never fail** - uses resilient error handling without `set -e`
 - mise activation and global tool installation happens automatically
 - Symlinks are created in `~/.config/coderv2/dotfiles/`
 - New terminals automatically have Node.js, pnpm, and all tools available
 - No shell restart needed - tools are activated during workspace creation
+- Always exits with code 0 (required for Coder's dotfiles module)
 
 ### Manual Bootstrap (Symlink Only)
 
@@ -455,6 +457,18 @@ These are expected warnings on modern Homebrew installations where these taps ar
 **Shell Changes:**
 - `chsh` may require password authentication in non-interactive environments (like Coder)
 - You can manually change shells later with: `chsh -s $(which zsh)`
+
+#### Coder Workspace Fails at "Configure Workspace"
+
+If your Coder workspace fails during dotfiles installation:
+
+1. **Check startup script logs**: `/tmp/coder-startup-script.log`
+2. **The install.sh script intentionally does NOT use `set -e`** to prevent failures
+3. **Script always exits with code 0** even with warnings
+4. If still failing, check if Coder dotfiles module is pointing to correct repo/branch
+5. Review [Coder's troubleshooting guide](https://coder.com/docs/admin/templates/troubleshooting#startup-script-issues)
+
+**Note**: This dotfiles repo is battle-tested for Coder environments and handles all common errors gracefully.
 
 #### mise Debugging
 
